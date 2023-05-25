@@ -34,6 +34,8 @@
       padding: 10px;
       max-width: 70%;
       word-wrap: break-word;
+      text-align: right;
+      margin-left: auto;
     }
 
     /* Bot message styles */
@@ -56,6 +58,11 @@
     .loading-message {
       font-style: italic;
       color: #888;
+      display: inline-block;
+    }
+
+    .loading-dots::after {
+      content: "";
       display: inline-block;
       animation: loading 1s infinite;
     }
@@ -88,7 +95,7 @@
       color: white;
       border: none;
       border-radius: 4px;
-      padding: 10px;
+      padding: 10px 15px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -106,6 +113,9 @@
       resize: none;
       font-family: Arial, sans-serif;
       font-size: 14px;
+      box-sizing: border-box;
+      margin: 0 auto;
+      display: block;
     }
 
     /* Background image styles */
@@ -113,6 +123,17 @@
       background-image: url("https://media.discordapp.net/attachments/1008571150873395220/1110970990814560348/Carly_a_nature_background_calm_that_can_be_used_for_a_website_24391d83-ffcf-4502-999a-3ec8557656e0.png?width=968&height=968");
       background-repeat: no-repeat;
       background-size: cover;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .button-container .button {
+      margin: 5px;
     }
   </style>
 </head>
@@ -123,9 +144,11 @@
     <div class="message-log" id="log"></div>
     <form id="chat-form">
       <textarea id="input" class="chat-input" placeholder="Type your message..." required></textarea>
-      <button type="submit" class="button">Send</button>
+      <div class="button-container">
+        <button id="submit-button" class="button" style="padding: 14px 20px;">Submit</button>
+        <button id="get-score-button" class="button">Get My Score</button>
+      </div>
     </form>
-    <button id="get-score-button" class="button">Get My Score</button>
     <div id="loading-message" class="hidden"></div>
     <div id="result" class="hidden">
       <p class="result-text"></p>
@@ -182,15 +205,25 @@
           "user_id": "<USER_ID_FOR_MEMORY_OF_LLM>"
         };
 
+        const botMessageDiv = document.createElement("div");
+        botMessageDiv.classList.add("message-container", "bot-message");
+        logDiv.appendChild(botMessageDiv);
+
+        // Display loading dots while waiting for bot's response
+        const loadingDots = document.createElement("span");
+        loadingDots.classList.add("loading-dots");
+        loadingDots.innerText = "...";
+        botMessageDiv.appendChild(loadingDots);
+
         queryChatbot(data).then((response) => {
-          const botMessageDiv = document.createElement("div");
-          botMessageDiv.classList.add("message-container", "bot-message");
+          // Remove loading dots
+          botMessageDiv.removeChild(loadingDots);
+
+          // Display bot's response
           botMessageDiv.innerText = response.replace("Chatbot: ", "");
           logDiv.appendChild(botMessageDiv);
 
           log.push({ question: input, answer: response });
-
-          logDiv.scrollTop = logDiv.scrollHeight;
         });
 
         document.getElementById("input").value = "";
@@ -222,6 +255,18 @@
 
     document.getElementById("chat-form").addEventListener("submit", submitForm);
     document.getElementById("get-score-button").addEventListener("click", getScore);
+
+    // Initial greeting message
+    const initialMessage = "Hey! How's your day going?";
+
+    // Display initial message
+    const logDiv = document.getElementById("log");
+    const botMessageDiv = document.createElement("div");
+    botMessageDiv.classList.add("message-container", "bot-message");
+    botMessageDiv.innerText = initialMessage;
+    logDiv.appendChild(botMessageDiv);
+
+    log.push({ question: "", answer: initialMessage });
   </script>
 </body>
 </html>
