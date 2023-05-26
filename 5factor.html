@@ -253,8 +253,16 @@
       loadingMessageDiv.classList.add("hidden");
     }
 
-    document.getElementById("chat-form").addEventListener("submit", submitForm);
-    document.getElementById("get-score-button").addEventListener("click", getScore);
+    document.getElementById("submit-button").addEventListener("click", function(event) {
+  event.preventDefault();
+  submitForm(event);
+});
+
+document.getElementById("get-score-button").addEventListener("click", function(event) {
+  event.preventDefault();
+  getScore();
+});
+
 
     // Initial greeting message
     const initialMessage = "Hey! How's your day going?";
