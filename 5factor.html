@@ -2,16 +2,24 @@
 <html>
 <head>
   <title>Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     /* Overall chat container styles */
     .chat-container {
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 10px;
-      max-width: 500px;
+      max-width: 90%; /* Change from 500px to 90% */
       margin: 0 auto;
       background-color: #f9f9f9;
       font-family: Arial, sans-serif;
+    }
+
+    /* Media queries */
+    @media screen and (min-width: 600px) {
+      .chat-container {
+        max-width: 600px;
+      }
     }
 
     /* Message log styles */
